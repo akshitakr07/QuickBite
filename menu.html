@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QuickBite - Menu</title>
+<link rel="stylesheet" href="menu.css">
+</head>
+<body>
+<div class="container">
+    <h1 id="canteenName"></h1>
+    
+    <div class="menu-list" id="menuList"></div>
+
+    <h2>Cart</h2>
+    <ul id="cartList"></ul>
+
+    <h3>Pickup Slot</h3>
+    <select id="pickupSlot">
+        <option value="10:00-10:30">10:00-10:30</option>
+        <option value="11:00-11:30">11:00-11:30</option>
+        <option value="12:00-12:30">12:00-12:30</option>
+    </select>
+
+    <h3>Payment Method</h3>
+    <select id="paymentMethod">
+        <option value="Cash">Cash</option>
+        <option value="UPI">UPI</option>
+        <option value="Card">Card</option>
+    </select>
+
+    <button id="placeOrder" class="btn">Place Order</button>
+</div>
+
+<script>
+// Sample menu items per canteen
+const menus = {
+    "Canteen A": [
+        {name: "Sandwich", price: 50},
+        {name: "Pasta", price: 80},
+        {name: "Burger", price: 60}
+    ],
+    "Canteen B": [
+        {name: "Maggi", price: 40},
+        {name: "Cold Coffee", price: 30},
+        {name: "Pizza Slice", price: 70}
+    ]
+};
+
+// Get selected canteen from previous page
+let selectedCanteen = localStorage.getItem('selectedCanteen');
+document.getElementById('canteenName').textContent = selectedCanteen;
+
+// Cart
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+const menuList = document.getElementById('menuList');
+const cartList = document.getElementById('cartList');
+
+// Display menu items
+menus[selectedCanteen].forEach(item => {
+    const div = document.createElement('div');
+    div.classList.add('menu-item');
+    div.innerHTML = `
+        <p>${item.name} - ₹${item.price}</p>
+        <input type="number" min="1" value="1" class="qty">
+        <button class="addBtn">Add to Cart</button>
+    `;
+    menuList.appendChild(div);
+
+    const btn = div.querySelector('.addBtn');
+    btn.addEventListener('click', () => {
+        const qty = parseInt(div.querySelector('.qty').value);
+        cart.push({
+            canteen: selectedCanteen,
+            name: item.name,
+            price: item.price,
+            quantity: qty,
+            status: "Pending"
+        });
+        localStorage.setItem('cart', JSON.stringify(cart));
+        displayCart();
+    });
+});
+
+// Display cart
+function displayCart() {
+    cartList.innerHTML = "";
+    cart.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} x${item.quantity} - ₹${item.price*item.quantity}`;
+        cartList.appendChild(li);
+    });
+}
+
+displayCart();
+
+// Place order
+document.getElementById('placeOrder').addEventListener('click', () => {
+    const pickup = document.getElementById('pickupSlot').value;
+    const payment = document.getElementById('paymentMethod').value;
+
+    let orders = JSON.parse(localStorage.getItem('orders')) || [];
+
+    cart.forEach(item => {
+        orders.push({
+            id: orders.length + 1,
+            name: "Student",  // replace with actual student name if available
+            canteen: item.canteen,
+            item: item.name,
+            quantity: item.quantity,
+            status: "Pending",
+            pickup: pickup,
+            payment: payment
+        });
+    });
+
+    localStorage.setItem('orders', JSON.stringify(orders));
+    localStorage.removeItem('cart'); // clear cart
+    cart = [];
+    alert("Order Placed! You can check order status.");
+    window.location.href = "customer_orders.html"; // redirect to order status page
+});
+</script>
+</body>
+</html>

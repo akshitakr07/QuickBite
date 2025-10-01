@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Staff Dashboard</title>
+<link rel="stylesheet" href="staff.css">
+</head>
+<body>
+<div class="container">
+    <h1>Staff Dashboard</h1>
+
+    <div class="status">
+        <p>Canteen Status: <span class="open">Open</span></p>
+        <button id="toggleStatus" class="btn">Toggle Status</button>
+    </div>
+
+    <div class="orders">
+        <h2>Recent Orders</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Student Name</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Status</th>
+                    <th>Update Status</th>
+                </tr>
+            </thead>
+            <tbody id="ordersTable"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+const tableBody = document.getElementById('ordersTable');
+
+function displayOrders() {
+    let orders = JSON.parse(localStorage.getItem('orders')) || [];
+    tableBody.innerHTML = "";
+
+    orders.forEach((order, index) => {
+        let statusClass = "";
+        if(order.status === "Pending") statusClass = "pending";
+        else if(order.status === "Preparing") statusClass = "preparing";
+        else if(order.status === "Completed") statusClass = "completed";
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${order.id}</td>
+            <td>${order.name}</td>
+            <td>${order.item}</td>
+            <td>${order.quantity}</td>
+            <td class="status-cell ${statusClass}">${order.status}</td>
+            <td>
+                <button class="updateBtn" data-index="${index}" ${order.status === "Completed" ? "disabled" : ""}>Next Stage</button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    // Add click events for all buttons
+    document.querySelectorAll('.updateBtn').forEach(btn => {
+        btn.addEventListener('click', e => {
+            const idx = e.target.getAttribute('data-index');
+            if(orders[idx].status === "Pending") orders[idx].status = "Preparing";
+            else if(orders[idx].status === "Preparing") orders[idx].status = "Completed";
+            localStorage.setItem('orders', JSON.stringify(orders));
+            displayOrders(); // refresh table
+        });
+    });
+}
+
+displayOrders();
+setInterval(displayOrders, 2000); // Auto-refresh
+
+// Toggle canteen status
+const toggleBtn = document.getElementById('toggleStatus');
+const statusSpan = document.querySelector('.status span');
+
+toggleBtn.addEventListener('click', () => {
+    if(statusSpan.classList.contains('open')){
+        statusSpan.textContent = "Closed";
+        statusSpan.classList.remove('open');
+        statusSpan.classList.add('closed');
+    } else {
+        statusSpan.textContent = "Open";
+        statusSpan.classList.remove('closed');
+        statusSpan.classList.add('open');
+    }
+});
+</script>
+</body>
+</html>

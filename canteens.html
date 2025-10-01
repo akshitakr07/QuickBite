@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QuickBite - Choose Canteen</title>
+  <link rel="stylesheet" href="canteens.css">
+</head>
+<body>
+  <h2>Choose Your Canteen</h2>
+  <div class="grid">
+    <div class="card">
+      <img src="https://source.unsplash.com/800x600/?canteen" alt="Canteen A">
+      <div class="card-content">
+        <h3>Canteen A</h3>
+        <p>Fresh meals and healthy options with a modern dining experience</p>
+        <button class="open-btn">View Menu</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://source.unsplash.com/800x600/?food,cafeteria" alt="Canteen B">
+      <div class="card-content">
+        <h3>Canteen B</h3>
+        <p>Warm comfort food and traditional favorites in a cozy atmosphere</p>
+        <button class="open-btn">View Menu</button>
+      </div>
+    </div>
+
+    <div class="card closed">
+      <img src="https://source.unsplash.com/800x600/?restaurant" alt="Canteen C">
+      <div class="card-content">
+        <h3>Canteen C</h3>
+        <p>International cuisine and gourmet options in a contemporary setting</p>
+        <button class="closed-btn" disabled>Currently Closed</button>
+      </div>
+    </div>
+  </div>
+  <script>
+const buttons = document.querySelectorAll('.open-btn');
+
+buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const canteenName = btn.parentElement.querySelector('h3').textContent;
+        localStorage.setItem('selectedCanteen', canteenName); // save canteen
+        window.location.href = "menu.html"; // go to menu page
+    });
+});
+</script>
+</body>
+</html>

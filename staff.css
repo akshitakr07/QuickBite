@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 95%;
+    max-width: 1000px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+.status {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.status .open {
+    color: green;
+    font-weight: bold;
+}
+
+.status .closed {
+    color: red;
+    font-weight: bold;
+}
+
+.btn {
+    padding: 12px 20px;
+    border: none;
+    background-color: orange;
+    color: #fff;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+}
+
+.btn:hover {
+    background-color: darkorange;
+}
+
+/* Table styling */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f0f0f0;
+}
+
+/* Status colors */
+.status-cell {
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.pending {
+    background-color: orange;
+}
+
+.preparing {
+    background-color: #1E90FF; /* blue */
+}
+
+.completed {
+    background-color: green;
+}
+
+/* Disable button for completed orders */
+button.updateBtn:disabled {
+    background-color: gray;
+    cursor: not-allowed;
+}
+
